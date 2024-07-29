@@ -5,6 +5,8 @@ services:
     image: mariadb:10.11
     command: --max-allowed-packet=64MB
     restart: always
+    networks:
+      - no-internet
     volumes:
       - db:/var/lib/mysql:Z
     environment:
@@ -17,6 +19,8 @@ services:
   app:
     image: matomo:fpm-alpine
     restart: always
+    networks:
+      - no-internet
     volumes:
       # - ./config:/var/www/html/config:z
       # - ./logs:/var/www/html/logs:z
@@ -32,6 +36,7 @@ services:
     image: nginx:alpine
     restart: always
     networks:
+      - no-internet
       - internet
       - backbone
     volumes:
