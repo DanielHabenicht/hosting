@@ -21,6 +21,8 @@ services:
     restart: always
     networks:
       - no-internet
+      - internet
+      - backbone
     volumes:
       # - ./config:/var/www/html/config:z
       # - ./logs:/var/www/html/logs:z
@@ -30,19 +32,6 @@ services:
       - PHP_MEMORY_LIMIT=2048M
     env_file:
       - ./db.env
-
-
-  web:
-    image: nginx:alpine
-    restart: always
-    networks:
-      - no-internet
-      - internet
-      - backbone
-    volumes:
-      - matomo:/var/www/html:z,ro
-      # see https://github.com/matomo-org/matomo-nginx
-      - ./matomo.conf:/etc/nginx/conf.d/default.conf:z,ro
     labels: 
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_backbone"
@@ -52,7 +41,6 @@ services:
       - "traefik.http.routers.matamo.tls.certresolver=wildcard-godaddy"
       - "traefik.http.routers.matamo.service=matamo-service@docker"
       - "traefik.http.services.matamo-service.loadbalancer.server.port=80"
-
 
 networks:
   no-internet:
