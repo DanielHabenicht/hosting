@@ -17,8 +17,9 @@ services:
   app:
     image: matomo:fpm-alpine
     restart: always
-    links:
-      - db
+    networks:
+      - internet
+      - backbone
     volumes:
       # - ./config:/var/www/html/config:z
       # - ./logs:/var/www/html/logs:z
@@ -38,7 +39,15 @@ services:
       - "traefik.http.routers.matamo.service=matamo-service@docker"
       - "traefik.http.services.matamo-service.loadbalancer.server.port=80"
 
-
+networks:
+  no-internet:
+    driver: bridge
+    internal: true
+  internet:
+    driver: bridge
+  backbone:
+#    name: traefik_backbone
+    external: true
 volumes:
   db:
   matomo:
