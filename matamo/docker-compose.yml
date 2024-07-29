@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb:10.11
+    command: --max-allowed-packet=64MB
+    restart: always
+    volumes:
+      - db:/var/lib/mysql:Z
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MARIADB_AUTO_UPGRADE=1
+      - MARIADB_DISABLE_UPGRADE_BACKUP=1
+    env_file:
+      - ./db.env
+
+  app:
+    image: matomo:fpm-alpine
+    restart: always
+    links:
+      - db
+    volumes:
+      # - ./config:/var/www/html/config:z
+      # - ./logs:/var/www/html/logs:z
+      - matomo:/var/www/html:z
+    environment:
+      - MATOMO_DATABASE_HOST=db
+      - PHP_MEMORY_LIMIT=2048M
+    env_file:
+      - ./db.env
+    labels: 
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_backbone"
+      - "traefik.http.routers.matamo.rule=Host(`matamo.aquiver.de`)"
+      - "traefik.http.routers.matamo.entrypoints=websecure"
+      - "traefik.http.routers.matamo.tls=true"
+      - "traefik.http.routers.matamo.tls.certresolver=wildcard-godaddy"
+      - "traefik.http.routers.matamo.service=matamo-service@docker"
+      - "traefik.http.services.matamo-service.loadbalancer.server.port=80"
+
+
+volumes:
+  db:
+  matomo:

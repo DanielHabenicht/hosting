@@ -1,0 +1,35 @@
+version: "3.4"
+services:
+  traefik:
+    image: "traefik:v3.1.0"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+#    env_file:
+#      - .env
+    ports:
+      - "80:80"
+      - "443:443"
+      # - "8001:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./acme.json:/acme.json"
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+    networks:
+      - backbone
+      - internet
+    labels:
+      traefik.enable: true
+
+      # Dashboard
+      #traefik.http.routers.traefik.rule: Host(`traefik.home.aquiver.de`)
+      #traefik.http.routers.traefik.service: api@internal
+      #traefik.http.routers.traefik.entrypoints: websecure
+      #traefik.http.routers.traefik.tls.certresolver: tlsleresolver
+
+networks:
+  internet:
+    driver: bridge
+  backbone:
+   external: true
+   internal: true
