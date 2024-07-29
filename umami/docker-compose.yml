@@ -18,7 +18,7 @@ services:
       - backbone
     labels: 
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik_backbone"
+      - "traefik.docker.network=backbone"
       - "traefik.http.routers.matamo.rule=Host(`matamo.aquiver.de`)"
       - "traefik.http.routers.matamo.entrypoints=websecure"
       - "traefik.http.routers.matamo.tls=true"
@@ -57,5 +57,4 @@ networks:
   internet:
     driver: bridge
   backbone:
-#    name: traefik_backbone
     external: true
