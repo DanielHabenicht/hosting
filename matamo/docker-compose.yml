@@ -17,7 +17,7 @@ services:
       - ./db.env
 
   app:
-    image: matomo:fpm-alpine
+    image: matomo
     restart: always
     networks:
       - no-internet
