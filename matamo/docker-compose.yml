@@ -23,10 +23,10 @@ services:
       - no-internet
       - internet
       - backbone
-    volumes:
+    # volumes:
       # - ./config:/var/www/html/config:z
       # - ./logs:/var/www/html/logs:z
-      - matomo:/var/www/html:z
+      # - matomo:/var/www/html:z
     environment:
       - MATOMO_DATABASE_HOST=db
       - PHP_MEMORY_LIMIT=2048M
