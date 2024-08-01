@@ -6,9 +6,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://umami:umami@db:5432/umami
       DATABASE_TYPE: postgresql
-      APP_SECRET: replace-me-with-a-random-string
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
@@ -19,7 +19,7 @@ services:
     labels: 
       - "traefik.enable=true"
       - "traefik.docker.network=backbone"
-      - "traefik.http.routers.matamo.rule=Host(`matamo.aquiver.de`)"
+      - "traefik.http.routers.matamo.rule=Host(`analytics.aquiver.de`)"
       - "traefik.http.routers.matamo.entrypoints=websecure"
       - "traefik.http.routers.matamo.tls=true"
       - "traefik.http.routers.matamo.tls.certresolver=wildcard-godaddy"
@@ -34,10 +34,10 @@ services:
     image: postgres:15-alpine
     environment:
       POSTGRES_DB: umami
-      POSTGRES_USER: umami
-      POSTGRES_PASSWORD: umami
+    env_file:
+      - .env
     volumes:
-      - umami-db-data:/var/lib/postgresql/data
+      - ./postgres/data:/var/lib/postgresql/data
     restart: always
     networks:
       - no-internet

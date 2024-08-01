@@ -1,4 +1,4 @@
 traefik.yml
 acme.json
 *.env
-!*.example.env
+!*example.env
